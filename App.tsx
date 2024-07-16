@@ -10,6 +10,8 @@ import Categories from "./screens/Categories";
 import MealDetail from "./screens/MealDetail";
 import MealOverview from "./screens/MealOverview";
 
+import FavoritesContextProvider from "./store/context/favorites-context";
+
 export type RootStackParamList = {
   Categories: undefined;
   Overview: { categoryId: string };
@@ -63,38 +65,35 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Categories"
-          screenOptions={{
-            headerStyle: { backgroundColor: "#351401" },
-            headerTintColor: "white",
-            contentStyle: { backgroundColor: "#3f2f25" },
-          }}
-        >
-          <Stack.Screen
-            name="Categories"
-            component={DrawerNavigator}
-            options={{
-              headerShown: false,
+      <FavoritesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Categories"
+            screenOptions={{
+              headerStyle: { backgroundColor: "#351401" },
+              headerTintColor: "white",
+              contentStyle: { backgroundColor: "#3f2f25" },
             }}
-          />
-          <Stack.Screen
-            name="Overview"
-            component={MealOverview}
-            // options={({route, navigation}) => {
-            //   return {
-            //     title: route.params.categoryId
-            //   }
-            // }}
-          />
-          <Stack.Screen
-            name="MealDetail"
-            component={MealDetail}
-            options={{ title: "About the Meal" }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              name="Categories"
+              component={DrawerNavigator}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Overview"
+              component={MealOverview}
+            />
+            <Stack.Screen
+              name="MealDetail"
+              component={MealDetail}
+              options={{ title: "About the Meal" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavoritesContextProvider>
     </>
   );
 }
