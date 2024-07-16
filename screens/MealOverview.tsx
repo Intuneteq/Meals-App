@@ -1,17 +1,11 @@
 import React, { useLayoutEffect } from "react";
+import { GestureResponderEvent } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  ListRenderItemInfo,
-  GestureResponderEvent,
-} from "react-native";
 
-import Meal from "../models/meal";
 import { RootStackParamList } from "../App";
-import MealItem from "../components/MealItem";
 import { MEALS, CATEGORIES } from "../data/dummy-data";
+
+import MealsList from "../components/MealsList/MealsList";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Overview">;
 
@@ -25,16 +19,6 @@ const MealOverview = ({
     mealItem.categoryIds.indexOf(categoryId)
   );
 
-  function pressHandler(_event: GestureResponderEvent, id: string) {
-    navigation.navigate("MealDetail", {
-      mealId: id,
-    });
-  }
-
-  function renderMealItem({ item }: ListRenderItemInfo<Meal>) {
-    return <MealItem meal={item} onPress={(e) => pressHandler(e, item.id)} />;
-  }
-
   useLayoutEffect(() => {
     const category = CATEGORIES.find((category) => category.id === categoryId);
     navigation.setOptions({
@@ -42,22 +26,7 @@ const MealOverview = ({
     });
   }, [categoryId, navigation]);
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={displayedMeals}
-        keyExtractor={(item) => item.id}
-        renderItem={renderMealItem}
-      />
-    </View>
-  );
+  return <MealsList meals={displayedMeals} />;
 };
 
 export default MealOverview;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});

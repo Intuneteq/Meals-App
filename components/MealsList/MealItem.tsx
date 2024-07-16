@@ -9,18 +9,29 @@ import {
   View,
 } from "react-native";
 
-import Meal from "../models/meal";
-import MealDetails from "./MealDetail/MealDetails";
+import Meal from "../../models/meal";
+import MealDetails from "./../MealDetail/MealDetails";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type Props = {
   meal: Meal;
-  onPress: (event: GestureResponderEvent) => void;
 };
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Overview">;
+
 export default function MealItem({
-  meal: { title, imageUrl, duration, complexity, affordability },
-  onPress,
+  meal: { id, title, imageUrl, duration, complexity, affordability },
 }: Props) {
+  const navigation = useNavigation<NavigationProp>();
+
+  function pressHandler(_event: GestureResponderEvent) {
+    navigation.navigate("MealDetail", {
+      mealId: id,
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Pressable
@@ -29,7 +40,7 @@ export default function MealItem({
           styles.innerContainer,
           pressed ? styles.buttonPressed : null,
         ]}
-        onPress={onPress}
+        onPress={pressHandler}
       >
         <View>
           <Image source={{ uri: imageUrl }} style={styles.image} />
