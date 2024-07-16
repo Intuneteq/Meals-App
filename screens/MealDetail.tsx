@@ -1,14 +1,18 @@
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
+import { RootState } from "../store/redux/store";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { MEALS } from "../data/dummy-data";
 import { RootStackParamList } from "../App";
+
 import List from "../components/MealDetail/List";
 import SubTitle from "../components/MealDetail/SubTitle";
 import MealDetails from "../components/MealDetail/MealDetails";
 import FavoriteIconButton from "../components/Icons/FavoriteIconButton";
-import { FavoritesContext } from "../store/context/favorites-context";
+
+import { useAppDispatch, useAppSelector } from "../store/redux/hooks";
+import { addFavorite, removeFavorite } from "../store/redux/slices/favorites";
 
 type Props = NativeStackScreenProps<RootStackParamList, "MealDetail">;
 
@@ -18,13 +22,13 @@ function MealDetail({
   },
   navigation,
 }: Props) {
-  const { isMealsFavorite, addFavorite, removeFavorite } =
-    useContext(FavoritesContext);
+  const dispatch = useAppDispatch();
+  const mealsIsFavorite = useAppSelector((state: RootState) =>
+    state.favorites.ids.includes(mealId)
+  );
 
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
   if (!selectedMeal) throw new Error("Meal Not Found");
-
-  const mealsIsFavorite = isMealsFavorite(mealId);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,9 +44,9 @@ function MealDetail({
 
   function changeFavoriteStatusHandler() {
     if (mealsIsFavorite) {
-      removeFavorite(mealId);
+      dispatch(removeFavorite({ id: mealId }));
     } else {
-      addFavorite(mealId);
+      dispatch(addFavorite({ id: mealId }));
     }
   }
 

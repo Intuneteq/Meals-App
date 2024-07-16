@@ -1,13 +1,16 @@
-import React, { useContext } from "react";
-import { MEALS } from "../data/dummy-data";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+
+import { MEALS } from "../data/dummy-data";
+import { useAppSelector } from "../store/redux/hooks";
+import { selectFavoriteMealsIds } from "../store/redux/slices/favorites";
+
 import MealsList from "../components/MealsList/MealsList";
-import { FavoritesContext } from "../store/context/favorites-context";
 
 type Props = {};
 
 function Favorites({}: Props) {
-  const { ids } = useContext(FavoritesContext);
+  const ids = useAppSelector(selectFavoriteMealsIds);
 
   const favoriteMeals = MEALS.filter((meal) => ids.includes(meal.id));
 
